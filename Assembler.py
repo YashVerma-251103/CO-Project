@@ -1,13 +1,6 @@
-#Steps to do
-#create a list of opp codes 
-#create a Pattern for registers
-#create a patter for memory
-#work in out in a file handler.
-
-
 import sys
 def imm_convert(s,r):
-    if int(s)>=-2**(int(r)-1) and int(s)<=((2**r)-1):  #2's complement range
+    if int(s)>=-2**(int(r)-1) and int(s)<=((2**int(r))-1):  #2's complement range
         if 1==1:
             if s[0]=="-":
                 if_negative=True
@@ -24,10 +17,8 @@ def imm_convert(s,r):
                     s=s+str(i)
                 d=int(r)-len(s)
                 s=d*"0"+s   # r bit binary number of given string
-                f=0
                 for i in s[::-1]:
-                    if i=="1":
-                        f=1                   
+                    if i=="1":                
                         d1=s[0:s.index(i)]  
                         d2=s[s.index(i): ]  # copying the number untill first 1
                         f=""
@@ -38,7 +29,7 @@ def imm_convert(s,r):
                                 f=f+"0"
                         s=f+d2
                         break
-                return [s,if_negative]
+                return s
                 #return s[0]+s[10:]+s[9]+s[1:9] #according to the imm[20|10:1|11|19:12] 
             elif s[0]!="-":
                 if_negative=False
@@ -54,7 +45,7 @@ def imm_convert(s,r):
                     s=s+str(i)
                 d=int(r)-len(s)
                 s=d*"0"+s      # r bit binary number of given string
-                return [s,if_negative]
+                return s
                 #return s[0]+s[10:]+s[9]+s[1:9] #according to the imm[20|10:1|11|19:12]
     else:
         return "imm val out of range"
@@ -91,57 +82,74 @@ def AND(rs1,rs2,rd): #This is and function
 # I - type Functions
 def lw(imm,rs1,rd): #configure imm
     i1=imm_convert(str(imm),str(12))
-    i1=i1[0]
     value=i1+reg_codes[rs1]+isa_codes["lw"]["f3"]+reg_codes[rd]+isa_codes["lw"]["opcode"]
     return value
 def addi(imm,rs1,rd): #configure imm
     i1=imm_convert(str(imm),str(12))
-    i1=i1[0]
     value=i1+reg_codes[rs1]+isa_codes["addi"]["f3"]+reg_codes[rd]+isa_codes["addi"]["opcode"]
     return value
 def sltiu(imm,rs1,rd): #configure imm
     i1=imm_convert(str(imm),str(12))
-    i1=i1[0]
     value=i1+reg_codes[rs1]+isa_codes["sltiu"]["f3"]+reg_codes[rd]+isa_codes["sltiu"]["opcode"]
     return value
 def jalr(imm,rs1,rd): #configure imm
     i1=imm_convert(str(imm),str(12))
-    i1=i1[0]
     value=i1+reg_codes[rs1]+isa_codes["jalr"]["f3"]+reg_codes[rd]+isa_codes["jalr"]["opcode"]
     return value
 
 # S - type Functions
 #same problem like B type
 def sw(imm,rs2,rs1): # configure imms   ||   imm1 --> 11:5   ||  imm2 --> 4:0 
-    value=imm1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["sw"]["f3"]+imm2+isa_codes["sw"]["opcode"]
+    si=imm_convert(str(imm),str(12))
+    s1=si[-6::-1]
+    s2=si[-1:-6:-1]
+    value=s1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["sw"]["f3"]+s2+isa_codes["sw"]["opcode"]
     return value
 
 # U - type
 def lui(imm,rd): #configure imm  ||  31:12
-    value=imm+reg_codes[rd]+isa_codes["lui"]["opcode"]
+    ui=imm_convert(str(imm),str(31))
+    u1=ui[-12::-1]
+    value=u1+reg_codes[rd]+isa_codes["lui"]["opcode"]
     return value
 def auipc(imm,rd): #configure imm  ||  31:12
-    value=imm+reg_codes[rd]+isa_codes["auipc"]["opcode"]
+    ui=imm_convert(str(imm),str(31))
+    u1=ui[-12::-1] 
+    value=u1+reg_codes[rd]+isa_codes["auipc"]["opcode"]
     return value
 
 # B - type      # configure imms   ||   imm1 --> 12|10:5   ||  imm2 --> 4:1|11
 def beq(rs1,rs2,imm):
-     value=imm1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["beq"]["f3"]+imm2+isa_codes["beq"]["opcode"]
-     return value
+    bi=imm_convert(str(imm),str(12))
+    b1=bi[-12]+bi[-5:-11:-1]
+    b2=bi[-1:-5:-1]+bi[-11]
+    value=b1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["beq"]["f3"]+b2+isa_codes["beq"]["opcode"]
+    return value
 def bne(rs1,rs2,imm):
-    value=imm1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["bne"]["f3"]+imm2+isa_codes["bne"]["opcode"]
+    bi=imm_convert(str(imm),str(12))
+    b1=bi[-12]+bi[-5:-11:-1]
+    b2=bi[-1:-5:-1]+bi[-11]
+    value=b1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["bne"]["f3"]+b2+isa_codes["bne"]["opcode"]
     return value
 def blt(rs1,rs2,imm):
-    value=imm1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["blt"]["f3"]+imm2+isa_codes["blt"]["opcode"]
+    bi=imm_convert(str(imm),str(12))
+    b1=bi[-12]+bi[-5:-11:-1]
+    b2=bi[-1:-5:-1]+bi[-11]
+    value=b1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["blt"]["f3"]+b2+isa_codes["blt"]["opcode"]
     return  
 def bge(rs1,rs2,imm):
-    value=imm1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["bge"]["f3"]+imm2+isa_codes["bge"]["opcode"]
+    bi=imm_convert(str(imm),str(12))
+    b1=bi[-12]+bi[-5:-11:-1]
+    b2=bi[-1:-5:-1]+bi[-11]
+    value=b1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["bge"]["f3"]+b2+isa_codes["bge"]["opcode"]
     return value
 def bltu(rs1,rs2,imm):
-    value=imm1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["bltu"]["f3"]+imm2+isa_codes["bltu"]["opcode"]
+    bi=imm_convert(str(imm),str(12))
+    b1=bi[-12]+bi[-5:-11:-1]
+    b2=bi[-1:-5:-1]+bi[-11]
+    value=b1+reg_codes[rs2]+reg_codes[rs1]+isa_codes["bltu"]["f3"]+b2+isa_codes["bltu"]["opcode"]
     return value
 def bgeu(rs1,rs2,imm):
-    
     bi=imm_convert(str(imm),str(12))
     b1=bi[-12]+bi[-5:-11:-1]
     b2=bi[-1:-5:-1]+bi[-11]
@@ -271,6 +279,7 @@ for instruction in data: #Gives me everthing required in a list
     input_instruction[counter]=instruct.split()
     counter+=1
 
+counter=1
 for instruction in input_instruction:
     opperation=instruction[0]
     if opperation in isa_codes.keys(): #if a valid opperation
@@ -303,7 +312,8 @@ for instruction in input_instruction:
             Output_instruction.append(Binary_Format)
         #bonus still left
     else: #give error of invalid opperation
-        pass
+        print(f"Invlid Instruction in line {counter}.")
+        exit()
         
 # creating a binary code text file
 with open("Avengers Assembled.txt","w") as f:
@@ -311,25 +321,25 @@ with open("Avengers Assembled.txt","w") as f:
 
 
 
-#for I type
-ii=imm_convert(str(imm),str(12))
-i1=ii[0]
+# #for I type
+# ii=imm_convert(str(imm),str(12))
+# i1=ii
 
-#for S type
-si=imm_convert(str(imm),str(12))
-s1=si[-6::-1]
-s2=si[-1:-6:-1]
+# #for S type
+# si=imm_convert(str(imm),str(12))
+# s1=si[-6::-1]
+# s2=si[-1:-6:-1]
 
-#for B type
-bi=imm_convert(str(imm),str(12))
-b1=bi[-12]+bi[-5:-11:-1]
-b2=bi[-1:-5:-1]+bi[-11]
+# #for B type
+# bi=imm_convert(str(imm),str(12))
+# b1=bi[-12]+bi[-5:-11:-1]
+# b2=bi[-1:-5:-1]+bi[-11]
 
-#for U type
-ui=imm_convert(str(imm),str(31))
-u1=ui[-12::-1]
+# #for U type
+# ui=imm_convert(str(imm),str(31))
+# u1=ui[-12::-1]
         
-#for J type
-ji=imm_convert(str(imm),str(20))  
-j1=ji[-20]+ji[-1:-11:-1]+ji[-11]+ji[-12:-20:-1]
+# #for J type
+# ji=imm_convert(str(imm),str(20))  
+# j1=ji[-20]+ji[-1:-11:-1]+ji[-11]+ji[-12:-20:-1]
 
