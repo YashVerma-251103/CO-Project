@@ -1,4 +1,6 @@
 import sys
+
+#Imm to binary
 def imm_convert(s,r):
     if int(s)>=-2**(int(r)-1) and int(s)<=((2**int(r))-1):  #2's complement range
         if 1==1:
@@ -98,7 +100,6 @@ def jalr(imm,rs1,rd): #configure imm
     return value
 
 # S - type Functions
-#same problem like B type
 def sw(imm,rs2,rs1): # configure imms   ||   imm1 --> 11:5   ||  imm2 --> 4:0 
     si=imm_convert(str(imm),str(12))
     s1=si[-6::-1]
@@ -173,9 +174,7 @@ def halt():
     pass
 def rvrs():
     pass
-
-#function to create an integer into binary
-    
+   
 
 reg_codes = { 
              "zero" : "00000",   # x0   
@@ -244,18 +243,15 @@ isa_codes={
     # J
       "jal":{"opcode":"1101111","type":"j","function":jal},
     # bonus -- configure -- special cases
-     "mul":{},
-     "rst":{},
-    "halt":{},
-    "rvrs":{}
+     "mul":{"type":"bonus"},
+     "rst":{"type":"bonus"},
+    "halt":{"type":"bonus"},
+    "rvrs":{"type":"bonus"}
 }
+
 
 # instructions=list(isa_codes.keys())
 # registers=list(reg_codes.keys())
-
-
-
-
 # no_of_variables = len(list_of_variables)
 # input_labels = []                                  
 # jump_to_labels = []                                      
@@ -310,7 +306,8 @@ for instruction in input_instruction:
             rd,imm=instruction[-1].split(",")
             Binary_Format=isa_codes[opperation]["function"](imm,rd)
             Output_instruction.append(Binary_Format)
-        #bonus still left
+        elif op_type=="bonus": #Still left
+            pass
     else: #give error of invalid opperation
         print(f"Invlid Instruction in line {counter}.")
         exit()
@@ -318,28 +315,3 @@ for instruction in input_instruction:
 # creating a binary code text file
 with open("Avengers Assembled.txt","w") as f:
     f.writelines(Output_instruction)
-
-
-
-# #for I type
-# ii=imm_convert(str(imm),str(12))
-# i1=ii
-
-# #for S type
-# si=imm_convert(str(imm),str(12))
-# s1=si[-6::-1]
-# s2=si[-1:-6:-1]
-
-# #for B type
-# bi=imm_convert(str(imm),str(12))
-# b1=bi[-12]+bi[-5:-11:-1]
-# b2=bi[-1:-5:-1]+bi[-11]
-
-# #for U type
-# ui=imm_convert(str(imm),str(31))
-# u1=ui[-12::-1]
-        
-# #for J type
-# ji=imm_convert(str(imm),str(20))  
-# j1=ji[-20]+ji[-1:-11:-1]+ji[-11]+ji[-12:-20:-1]
-
