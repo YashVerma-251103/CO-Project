@@ -86,6 +86,47 @@ def jal(imm,rd):
     value=imm+reg_codes[rd]+isa_codes["jal"]["opcode"]
     return value
 
+# Bonus - Type #       ||    still need to build these out
+def mul():
+    pass
+def rst():
+    pass
+def halt():
+    pass
+def rvrs():
+    pass
+
+#function to create an integer into binary
+
+# def valid_int_check(num_string,negative=False):
+#     flag=True
+#     for i in range(0,len(num_string)):
+def dec2bin(number):
+    ans = ""
+    if ( number == 0 ):
+        return 0
+    while ( number ):
+        ans += str(number&1)
+        number = number >> 1
+     
+    ans = ans[::-1]
+ 
+    return ans 
+def int_bin(num_string,negative=False):
+    num=int(num_string)
+    
+    ans = ""
+    if ( num == 0 ):
+        return 0
+    while (num):
+        ans += str(num&1)
+        num = num >> 1
+        
+    ans = ans[::-1]
+
+    if (negative):
+        num=(-1)*(num)
+
 reg_codes = { 
               "R0" : "00000",
               "R1" : "00001",
@@ -123,15 +164,15 @@ reg_codes = {
              "FLAGS" : "111"}
 isa_codes={
     # r type
-     "add":{"opcode":"0110011","type":"r","f3":"000","f7":"0000000"},
-     "sub":{"opcode":"0110011","type":"r","f3":"000","f7":"0100000"},
-     "sll":{"opcode":"0110011","type":"r","f3":"001","f7":"0000000"},
-     "slt":{"opcode":"0110011","type":"r","f3":"010","f7":"0000000"},
-    "sltu":{"opcode":"0110011","type":"r","f3":"011","f7":"0000000"},
-     "xor":{"opcode":"0110011","type":"r","f3":"100","f7":"0000000"},
-     "srl":{"opcode":"0110011","type":"r","f3":"101","f7":"0000000"},
-      "or":{"opcode":"0110011","type":"r","f3":"110","f7":"0000000"},
-     "and":{"opcode":"0110011","type":"r","f3":"111","f7":"0000000"},
+      "add":{"opcode":"0110011","type":"r","f3":"000","f7":"0000000"},
+      "sub":{"opcode":"0110011","type":"r","f3":"000","f7":"0100000"},
+      "sll":{"opcode":"0110011","type":"r","f3":"001","f7":"0000000"},
+      "slt":{"opcode":"0110011","type":"r","f3":"010","f7":"0000000"},
+     "sltu":{"opcode":"0110011","type":"r","f3":"011","f7":"0000000"},
+      "xor":{"opcode":"0110011","type":"r","f3":"100","f7":"0000000"},
+      "srl":{"opcode":"0110011","type":"r","f3":"101","f7":"0000000"},
+       "or":{"opcode":"0110011","type":"r","f3":"110","f7":"0000000"},
+      "and":{"opcode":"0110011","type":"r","f3":"111","f7":"0000000"},
     # i
        "lw":{"opcode":"0000011","type":"i","f3":"010"},
      "addi":{"opcode":"0010011","type":"i","f3":"000"},
@@ -160,3 +201,6 @@ isa_codes={
 
 instructions=list(isa_codes.keys())
 registers=list(reg_codes.keys())
+
+
+
