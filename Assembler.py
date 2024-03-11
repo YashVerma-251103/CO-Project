@@ -5,31 +5,17 @@ output_file= sys.argv[2]
 
 def imm_convert(decimal_str, num_bits):
     if int(decimal_str)>=-2**(int(num_bits)-1) and int(decimal_str)<=((2**int(num_bits))-1):
-        # Convert the decimal string to an integer
         decimal = int(decimal_str)
         num_bits=int(num_bits)
-
-        # Check if the decimal number is negative
         is_negative = decimal < 0
-
-        # Absolute value of the decimal number
         abs_decimal = abs(decimal)
-
-        # Convert the absolute value to binary
         binary = ''
         while abs_decimal > 0:
             binary = str(abs_decimal % 2) + binary
             abs_decimal //= 2
-
-        # Pad the binary representation with zeros to match the number of bits
         binary = binary.rjust(num_bits, '0')
-
-        # If the number is negative, calculate 2's complement
         if is_negative:
-            # Invert the bits
             inverted_binary = ''.join(['1' if bit == '0' else '0' for bit in binary])
-
-            # Add 1 to the inverted binary
             twos_complement = ''
             carry = 1
             for bit in inverted_binary[::-1]:
@@ -311,7 +297,10 @@ labels={"Present":False,"Labels":[],"line":[]} # Lable counter
 Virtual_Halts=[]
 
 for instruction in data: #Gives me everthing required in a list
+    if instruction in ["\n",""]:
+        continue
     instruct=instruction.rstrip()
+    instruct=instruct.lstrip()
     if ":" in instruct:
         index_=instruct.index(":")
         if ("beq zero,zero,0\n" == instruct[index_+1:]):
