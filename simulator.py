@@ -218,6 +218,8 @@ def driver(start):
             JCall(instructions[x])
         elif Opcode=="1100011": 
             BCall(instructions[x])
+        elif Opcode=="0100011":
+            SCall(instructions[x])        
         elif Opcode=="0110111": 
             UCall(instructions[x],"0110111")
         elif Opcode=="0010111": 
@@ -228,8 +230,6 @@ def driver(start):
             ICall(instructions[x],"0010011")
         elif Opcode=="1100111": 
             ICall(instructions[x],"1100111")
-        elif Opcode=="0100011":
-            SCall(instructions[x],"0100011")
 
 # Start
 driver(0)
